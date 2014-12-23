@@ -516,6 +516,16 @@ textarea {
 
 /* Buttons
    ========================================================================== */
+/* line 45, ../../src/sass/partials/_helpers.scss */
+.btn--gloss {
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 18px;
+  color: white;
+  background: none;
+  border: 2px solid white;
+}
+
 /* Typograpy
    ========================================================================== */
 /* ==========================================================================
@@ -573,6 +583,54 @@ p:last-child {
 /* ==========================================================================
    Layouts
    ========================================================================== */
+/* line 5, ../../src/sass/partials/_layouts.scss */
+body {
+  background: black;
+}
+
+/* line 9, ../../src/sass/partials/_layouts.scss */
+.main-bg {
+  position: fixed;
+  z-index: 1;
+  text-align: center;
+}
+/* line 13, ../../src/sass/partials/_layouts.scss */
+.main-bg img {
+  width: auto;
+  max-width: none;
+  height: 100vh;
+}
+/* line 18, ../../src/sass/partials/_layouts.scss */
+.main-bg:before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* line 27, ../../src/sass/partials/_layouts.scss */
+.sec, .sec--header {
+  position: relative;
+  z-index: 10;
+}
+
+/* line 32, ../../src/sass/partials/_layouts.scss */
+.sec--header {
+  height: 100px;
+  background: #101010;
+  text-align: center;
+  border-bottom: 10px solid rgba(255, 255, 255, 0.6);
+}
+/* line 38, ../../src/sass/partials/_layouts.scss */
+.sec--header .btn--gloss {
+  margin-top: 20px;
+}
+/* line 41, ../../src/sass/partials/_layouts.scss */
+.sec--header .btn--gloss + .btn--gloss {
+  margin-left: 20px;
+}
+
 /* Layout Components
    ========================================================================== */
 /* ==========================================================================

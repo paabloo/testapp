@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+<title>AngularJS - ToDo App</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.css" />
+    <style>
+        body {
+            padding-top: 40px;
+        }
+        .done-true {
+            text-decoration: line-through;
+            color: #ddd;
+        }
+        ul {
+            list-style: none;
+        }
+        li,
+        li label {
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body ng-controller="defaultCtrl">
+<div class="container">
+
+
+    <div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Add task!</h3>
+  </div>
+ <div class="panel-body">
+
+<form name="f" ng-submit="addTodo()">
+    To do: <textarea class="form-control" name="newTodo" ng-model="formData.newTodo" required></textarea>
+    Type: <select class="form-control" name="type" ng-model="formData.type" ng-options="value.name for value in categories" required>
+    </select>
+    Estimated time: <select class="form-control" name="estimates" ng-model="formData.estimates" ng-options="value for value in estimates" required>
+    </select><br />
+    <button class="btn btn-success" ng-class="{'btn-warning': allowDuplicate}" ng-disabled="f.$invalid">Add <span class="glyphicon glyphicon-ok"></span></button>
+    <span class="text-warning" ng-show="allowDuplicate">"To do" title already exists. Continue adding?</span>
+</form>
+  </div>
+</div>
+
+
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">To Do List</h3>
+  </div>
+ <div class="panel-body">
+    <ul>
+        <li>
+            <input type="text" ng-model="todoname.title">
+        </li>
+        <li ng-repeat="todo in todos | filter:todoname track by $index" ng-model="result">
+            <input type="checkbox" ng-model="todo.done" title="Mark Complete" id="todo_{{$index + 1}}"/>
+            <label for="todo_{{$index + 1}}" class="done-{{todo.done}}">{{todo.title}} ({{todo.estimates}}h)</label> <span class="glyphicon glyphicon-{{todo.type.gico}} done-{{todo.done}}"></span>
+        </li>
+        <li ng-hide="(todos|filter:todoname).length"><span class="text-warning">-- no result --</span></li>
+        <li ng-hide="todos.length"><span class="text-danger">-- empty list --</span></li>
+    </ul>
+  </div>
+</div>
+<div class="panel panel-default" >
+    <div class="panel-body" >
+        <button class="btn btn-danger" ng-click="deleteCompleted()">Delete Completed <span class="glyphicon glyphicon-remove"></span></button>
+        <button class="btn btn-danger" ng-click="toggleJson=!toggleJson">Toggle JSON  <span class="glyphicon glyphicon-arrow-down"></span></button>
+    </div>
+</div>
+
+    <pre ng-show="toggleJson">
+        {{todos | json}}
+    </pre>
+
+</div>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.js"></script>
+
+<script>
+
+    var app = angular.module("app", []);
+
+    app.controller('defaultCtrl', ['$scope', 'todos', function ($scope, todos) {
+
+        // window.localStorage['todos'] = ''; // uncomment once to reset localStorage
+
+        if(!window.localStorage['todos']) {
+            window.localStorage['todos'] = JSON.stringify(todos);
+        }
+
+        $scope.todos = JSON.parse(window.localStorage['todos'] || {});
+
+        $scope.toggleJson = false;
+        $scope.allowDuplicate = false;
+        $scope.estimates = [0.5, 1, 2, 3, 5, 8];
+        $scope.categories = [
+                { name: 'Personal', 'gico': 'heart' },
+                { name: 'Health', 'gico': 'tint' },
+                { name: 'Learning', 'gico': 'book' },
+                { name: 'Business', 'gico': 'usd' },
+                { name: 'Home', 'gico': 'home' },
+                { name: 'Other', 'gico': 'paperclip' }];
+
+        $scope.formData = { type: $scope.categories[0], estimates: $scope.estimates[0] };
+        $scope.$watch('formData.newTodo', function(){
+            $scope.allowDuplicate = false;
+        });
+
+        $scope.searchForDuplicates = function () {
+            var duplicate = false;
+            angular.forEach($scope.todos, function(val, key){
+                if((val.title) == ($scope.formData.newTodo)) {
+                    duplicate = true;
+                }
+            });
+            return duplicate;
+        };
+        $scope.addTodo = function () {
+            // if same name then push else do not allow push
+            if($scope.searchForDuplicates() && !$scope.allowDuplicate) {
+                $scope.allowDuplicate = true;
+            } else {
+                $scope.todos.push({ 'title': $scope.formData.newTodo, 'done': false, 'type': $scope.formData.type, 'estimates': $scope.formData.estimates });
+                window.localStorage['todos'] = JSON.stringify($scope.todos);
+                $scope.allowDuplicate = false;
+                $scope.formData.newTodo = '';
+            }
+        };
+
+        $scope.deleteCompleted = function () {
+            $scope.todos = $scope.todos.filter(function (item) {
+                return !item.done;
+            });
+            window.localStorage['todos'] = JSON.stringify($scope.todos);
+        };
+
+    }]);
+
+    app.factory('todos', function () {
+        return [
+            {
+                'title': 'Dating with Julita', 'done': false, "type": { "name": "Personal", "gico": "heart" }, 'estimates': 3
+            },
+            {
+                'title': 'Gym', 'done': true, "type": { "name": "Health", "gico": "tint" }, 'estimates': 2
+            },
+            {
+                'title': 'AngularJS next step', 'done': false, "type": { "name": "Learning", "gico": "book" }, 'estimates': 4
+            },
+            {
+                'title': 'Meeting with John', 'done': false, "type": { "name": "Business", "gico": "usd" }, 'estimates': 1
+            }
+        ];
+    });
+
+
+</script>
+</body>
+</html>

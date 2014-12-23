@@ -1,3 +1,44 @@
 /* ==========================================================================
    Layouts
    ========================================================================== */
+
+body {
+    background: black;
+}
+
+.main-bg {
+    position: fixed;
+    z-index: 1;
+    text-align: center;
+    img {
+        width: auto;
+        max-width: none;
+        height: 100vh;
+    }
+    &:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+    }
+}
+
+.sec {
+    position: relative;
+    z-index: 10;
+}
+
+.sec--header {
+    @extend .sec;
+    height: 100px;
+    background: #101010;
+    text-align: center;
+    border-bottom: 10px solid rgba(#fff, 0.6);
+    .btn--gloss {
+        margin-top: 20px;
+    }
+    .btn--gloss + .btn--gloss {
+        margin-left: 20px;
+    }
+}
