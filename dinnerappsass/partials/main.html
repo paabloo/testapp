@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="alert alert-warning" ng-hide="confirmed">
+        Wybierz <strong>obiad</strong>!
+    </div>
+    <div class="alert alert-success" ng-show="confirmed">
+        Wybór <strong>zatwierdzony</strong>! Dziękujemy!
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Dzisiejsze obiady: {{ checkDate() | date:'fullDate' }}
+            </h3>
+        </div>
+        <div class="panel-body">
+            <div class="container-fluid">
+                <div class="col-sm-3" ng-repeat="dinner in dinners">
+                    <h4><span class="label label-primary" ng-class="{'label-success': $index+1 === dinnerPicken}">{{dinner.number}}</span> {{dinner.name}}</h4>
+                    <div class="well well-sm">{{dinner.description}}</div>
+                    <button class="btn btn-primary" ng-click="pickDinner($index)" ng-class="{'btn-success': $index+1 === dinnerPicken}" ng-disabled="confirmed"><span ng-hide="$index+1 === dinnerPicken">Wybierz obiad</span><span ng-show="$index+1 === dinnerPicken">Wybrano!</span> <i class="glyphicon glyphicon-cutlery"></i></button>
+                </div>
+            </div>
+            <div class="well catering-page">
+                Źródło: <a href="http://dogorynogamicatering.pl/" target="_blank">http://dogorynogamicatering.pl/</a>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button class="btn btn-success" ng-disabled="!checkIfCanComfirm()" ng-click="confirmPick()"><i class="glyphicon glyphicon-ok"></i> Potwierdź <span ng-show="dinnerPicken">zestaw nr: {{dinnerPicken}}</span></button>
+            <button class="btn btn-danger pull-right" ng-disabled="!checkIfCanComfirm()" ng-click="cancelPick()"><i class="glyphicon glyphicon-remove"></i> Anuluj wybór</button>
+        </div>
+    </div>
+    <div id="js-test">
+
+    </div>
+</div>
